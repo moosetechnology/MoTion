@@ -33,6 +33,16 @@ String >> asObjectPath [
 ]
 
 { #category : '*MoTion' }
+String >> isValidRegex [
+	
+	"Returns true if self is a valide regex and false if not"
+
+    ^[ self asRegex. true ] 
+        on: Error 
+        do: [ false ]
+]
+
+{ #category : '*MoTion' }
 String >> orMatches: aMatcher [
 
 	^ OrMatcher between: self asMatcher and: aMatcher asMatcher

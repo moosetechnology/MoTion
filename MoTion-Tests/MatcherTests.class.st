@@ -79,6 +79,18 @@ MatcherTests >> testMatcherStringPartial [
 ]
 
 { #category : 'tests' }
+MatcherTests >> testMatcherStringRegEx [
+
+	| myMatcher |
+	myMatcher := MatcherLiteralString new.
+	myMatcher value: '\{\{[^}]+\}\}'.
+
+	self assert:
+		(myMatcher match: 'The {{fox}} jumped over the {{dog}}') isMatch.
+	self deny: (myMatcher match: 'Hi') isMatch
+]
+
+{ #category : 'tests' }
 MatcherTests >> testMatcherSymbolCollection [
 	
 	| myMatcher |
