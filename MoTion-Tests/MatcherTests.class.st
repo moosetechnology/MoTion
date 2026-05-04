@@ -7,6 +7,22 @@ Class {
 }
 
 { #category : 'tests' }
+MatcherTests >> testHigherThanWithMoTion [
+    | pattern a matcher |
+    a := MTTestObjectA new.
+    a lint: 150.
+    matcher := MatcherHigherThan new.
+    matcher value: 100.
+    pattern := MTTestObjectA % {
+        #lint <=> matcher
+    }.
+    self assert: (pattern match: a) isMatch.
+    
+    a lint: 50.
+    self deny: (pattern match: a) isMatch.
+]
+
+{ #category : 'tests' }
 MatcherTests >> testMatcherBoolean [
 
 	| matcher |
