@@ -14,7 +14,7 @@ MatcherTests >> testHigherThanWithMoTion [
     matcher := MatcherHigherThan new.
     matcher value: 100.
     pattern := MTTestObjectA % {
-        #lint <=> matcher
+        #lint <=> matcher         "on fait comme ça car HigherThan ne marche pas sur Object, on a pu definir MatcherHigherThan inside btw"
     }.
     self assert: (pattern match: a) isMatch.
     

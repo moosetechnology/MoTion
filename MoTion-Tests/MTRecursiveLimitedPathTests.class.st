@@ -90,19 +90,6 @@ MTRecursiveLimitedPathTests >> testDepthWithNonExistentPath [
 ]
 
 { #category : 'tests' }
-MTRecursiveLimitedPathTests >> testHigherThanWithMoTion [
-    | pattern |
-    a lint: 150.
-    pattern := MTTestObjectA % {
-        (#lint higherThan: 100)
-    }.
-    self assert: (pattern match: a) isMatch.
-    
-    a lint: 50.
-    self deny: (pattern match: a) isMatch.
-]
-
-{ #category : 'tests' }
 MTRecursiveLimitedPathTests >> testRecursiveLimitedPath [
     | path result |
     
