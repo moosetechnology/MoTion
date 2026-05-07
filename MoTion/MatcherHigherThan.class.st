@@ -5,9 +5,11 @@ Class {
 	#package : 'MoTion'
 }
 
-{ #category : 'as yet unclassified' }
-MatcherHigherThan >> higherThan: aValue [
-    ^ MatcherHigherThan value: aValue
+{ #category : 'instance creation' }
+MatcherHigherThan class >> of: aValue [
+
+	^ self new value: aValue; 
+	yourself 
 ]
 
 { #category : 'matching' }

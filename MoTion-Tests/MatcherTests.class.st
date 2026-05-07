@@ -7,6 +7,19 @@ Class {
 }
 
 { #category : 'tests' }
+MatcherTests >> testHigherOrEqualThanMoTionDirect [
+
+    | pattern a |
+    a := MTTestObjectA new.
+    a lint: 100.
+    pattern := MTTestObjectA % { (#lint higherOrEqualTo: 100) }.
+    self assert: (pattern match: a) isMatch.
+    
+    a lint: 50.
+    self deny: (pattern match: a) isMatch.
+]
+
+{ #category : 'tests' }
 MatcherTests >> testHigherThanWithMoTion [
     | pattern a matcher |
     a := MTTestObjectA new.
@@ -20,6 +33,45 @@ MatcherTests >> testHigherThanWithMoTion [
     
     a lint: 50.
     self deny: (pattern match: a) isMatch.
+]
+
+{ #category : 'tests' }
+MatcherTests >> testHigherThanWithMoTionDirect [
+    | pattern a |
+    a := MTTestObjectA new.
+    a lint: 150.
+    pattern := MTTestObjectA % {
+        (#lint higherThan: 100)
+    }.
+    self assert: (pattern match: a) isMatch.
+    
+    a lint: 50.
+    self deny: (pattern match: a) isMatch.
+]
+
+{ #category : 'tests' }
+MatcherTests >> testLessThanWithMoTionDirect [
+    | pattern a |
+    a := MTTestObjectA new.
+    a lint: 50.
+    pattern := MTTestObjectA % { (#lint lessThan: 100) }.
+    self assert: (pattern match: a) isMatch.
+    
+    a lint: 150.
+    self deny: (pattern match: a) isMatch.
+]
+
+{ #category : 'tests' }
+MatcherTests >> testLessrOrEqualThanMoTionDirect [
+
+	| pattern a |
+	a := MTTestObjectA new.
+	a lint: 100.
+	pattern := MTTestObjectA % { (#lint lessOrEqualTo: 100) }.
+	self assert: (pattern match: a) isMatch.
+
+	a lint: 150.
+	self deny: (pattern match: a) isMatch
 ]
 
 { #category : 'tests' }

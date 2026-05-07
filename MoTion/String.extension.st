@@ -41,6 +41,11 @@ String >> asObjectPath [
 ]
 
 { #category : '*MoTion' }
+String >> higherThan: aValue [
+    ^ self -> (MatcherHigherThan of: aValue)
+]
+
+{ #category : '*MoTion' }
 String >> orMatches: aMatcher [
 
 	^ OrMatcher between: self asMatcher and: aMatcher asMatcher
