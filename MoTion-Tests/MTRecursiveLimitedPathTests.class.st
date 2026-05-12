@@ -152,6 +152,21 @@ MTRecursiveLimitedPathTests >> testRecursiveLimitedPathWithPharoAST [
 ]
 
 { #category : 'tests' }
+MTRecursiveLimitedPathTests >> testRecursiveLimitedPathWithPharoASTNoLimit [
+    | pattern result |
+    "AST of matchOnlyNumber:withContext: contains a > message"
+    pattern := RBMethodNode % { (#'children*'
+                <=>
+                (RBMessageNode % { (#'selector>value' <=> #>) } as:
+                     #found)) }.
+    result := pattern
+                  collectBindings: { #found }
+                  for:
+                  (MatcherHigherThan >> #matchOnlyNumber:withContext:) ast.
+    self assert: result isEmpty not.
+]
+
+{ #category : 'tests' }
 MTRecursiveLimitedPathTests >> testRecursivePath2 [
 | d e f g h path result |
 d := MTTestObjectD new.

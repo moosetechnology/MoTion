@@ -20,22 +20,17 @@ String >> asMooseObjectPath [
 String >> asObjectPath [
     | symbol |
     symbol := self asSymbol.
-    (symbol includes: $>) ifTrue: [ 
+    (symbol includes: $>) ifTrue: [
         ^ MTComposedPath of:
               ((symbol splitOn: '>') collect: [ :each | each asObjectPath ]) ].
     symbol = #_ ifTrue: [ ^ MTDirectChildrenPath new ].
     symbol = #'_*' ifTrue: [ ^ MTRecursiveChildrenPath new ].
-    
-    "AJOUTER ICI POUR LIMITED :"
-(symbol includesSubstring: '*') ifTrue: [
-    | parts |
-    parts := symbol splitOn: $*.
-    ^ MTRecursiveLimitedPath 
-        of: parts first 
-        depth: parts last asInteger
-].
-    
-    (symbol endsWith: '*') ifTrue: [ ^ MTRecursivePath of: (symbol withoutSuffix: '*') ].
+    (symbol endsWith: '*') ifTrue: [
+        ^ MTRecursivePath of: (symbol withoutSuffix: '*') ].
+    (symbol includesSubstring: '*') ifTrue: [
+        | parts |
+        parts := symbol splitOn: $*.
+        ^ MTRecursiveLimitedPath of: parts first depth: parts last asInteger ].
     symbol = #@ ifTrue: [ ^ MTIdentityPath new ].
     ^ MTDirectPath of: symbol
 ]

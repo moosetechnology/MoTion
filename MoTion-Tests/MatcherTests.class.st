@@ -1,10 +1,43 @@
 Class {
 	#name : 'MatcherTests',
 	#superclass : 'TestCase',
+	#instVars : [
+		'parser'
+	],
 	#category : 'MoTion-Tests-matchers',
 	#package : 'MoTion-Tests',
 	#tag : 'matchers'
 }
+
+{ #category : 'running' }
+MatcherTests >> setUp [
+    parser := FASTTypeScriptParser new.
+
+	
+]
+
+{ #category : 'tests' }
+MatcherTests >> testGetMethodName [
+    | res pattern results |
+    res := parser parse: 'class MyClass {
+        method1() { }
+        method2() { }
+        method3() { }
+    }'.
+
+    pattern := FASTTypeScriptClassDeclaration % {
+        #'children*' <=> (FASTTypeScriptMethodDefinition % {
+            #'name>sourceCode' <=> 'method1'
+        } as: #foundMethod)
+    }.
+
+    results := pattern
+               collectBindings: { #foundMethod }
+               for: (res allWithType: FASTTypeScriptClassDeclaration) first.
+
+    self assert: results isEmpty not.
+    self assert: ((results first at: #foundMethod) name sourceCode = 'method1').
+]
 
 { #category : 'tests' }
 MatcherTests >> testHigherOrEqualThanMoTionDirect [
@@ -216,4 +249,20 @@ MatcherTests >> testMatcherSymbolPartial [
 	 
 	self assert: (myMatcher match: #'Hi Mr.') isMatch.
 	self deny: (myMatcher match: 'Bonjour Mr.') isMatch 
+]
+
+{ #category : 'tests' }
+MatcherTests >> testMethodHasIfStatement [
+    | res pattern results |
+    res := parser parse: 'class MyClass {
+        myMethod(x: number) {
+            if (x > 0) { return 1; }
+            else { return 0; }
+        }
+    }'.
+    pattern := FASTTypeScriptClassDeclaration % {
+        #'children*' <=> (FASTTypeScriptIfStatement % {} as: #ifst)
+    }.
+    results := pattern collectBindings: {#ifst} for: (res allWithType: FASTTypeScriptClassDeclaration) first.
+    self assert: results isEmpty not.
 ]
