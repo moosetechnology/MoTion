@@ -266,3 +266,109 @@ MatcherTests >> testMethodHasIfStatement [
     results := pattern collectBindings: {#ifst} for: (res allWithType: FASTTypeScriptClassDeclaration) first.
     self assert: results isEmpty not.
 ]
+
+{ #category : 'tests' }
+MatcherTests >> testRenameAll [
+    | parser source res result |
+    parser := FASTTypeScriptParser new.
+    source := 'class MyClass {
+        method1() { }
+    }
+    class OtherClass {
+        test() {
+            let obj = new MyClass();
+            obj.method1();
+        }
+    }'.
+    
+    res := parser parse: source.
+    
+    result := TSRenameMethodOperator new
+        oldName: 'method1';
+        newName: 'myMethod1';
+        source: source;
+        renameAll: res.
+    
+    "Tout renommé:"
+    self assert: (result includesSubstring: 'myMethod1').
+    
+    "method1 n'existe plus nulle part:"
+    self deny: (result includesSubstring: 'method1').
+]
+
+{ #category : 'tests' }
+MatcherTests >> testRenameDefinitionOnly [
+    | parser source res result |
+    parser := FASTTypeScriptParser new.
+    source := 'class MyClass {
+        method1() { }
+    }
+    class OtherClass {
+        method1() { }
+        test() {
+            let obj = new MyClass();
+            obj.method1();
+        }
+    }'.
+    
+    res := parser parse: source.
+    
+    result := TSRenameMethodOperator new
+        oldName: 'method1';
+        newName: 'myMethod1';
+        source: source;
+        renameDefinitionOnly: res.
+    
+    "Definition renommée:"
+    self assert: (result includesSubstring: 'myMethod1').
+    
+    "OtherClass.method1 intact:"
+    self assert: (result includesSubstring: 'method1').
+]
+
+{ #category : 'tests' }
+MatcherTests >> testRenommerMethode [
+    | parser source res method result |
+    parser := FASTTypeScriptParser new.
+    source := 'class MyClass {
+        method1() { }
+        method2() { }
+    }'.
+
+    res := parser parse: source.
+    method := (res allWithType: FASTTypeScriptMethodDefinition) first.
+
+    result := source 
+        copyReplaceAll: method name sourceCode 
+        with: 'myMethod1'.
+
+    "Vérifie que myMethod1 est dans le résultat"
+    self assert: (result includesSubstring: 'myMethod1').
+    
+    "Vérifie que method1 n'est plus là"
+    self deny: (result includesSubstring: 'method1').
+    
+    "Vérifie que method2 est intact"
+    self assert: (result includesSubstring: 'method2').
+]
+
+{ #category : 'tests' }
+MatcherTests >> testTSRenameMethodOperator [
+    | parser source res result |
+    parser := FASTTypeScriptParser new.
+    source := 'class MyClass {
+        method1() { }
+        method2() { }
+    }'.
+    res := parser parse: source.
+    
+    result := TSRenameMethodOperator new
+        oldName: 'method1';
+        newName: 'myMethod1';
+        source: source;
+        applyOn: res.
+    
+    self assert: (result includesSubstring: 'myMethod1').
+    self deny: (result includesSubstring: 'method1').
+    self assert: (result includesSubstring: 'method2').
+]
