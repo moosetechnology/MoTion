@@ -298,9 +298,10 @@ MatcherTests >> testRenameAll [
 
 { #category : 'tests' }
 MatcherTests >> testRenameDefinitionOnly [
-    | parser source res result |
-    parser := FASTTypeScriptParser new.
-    source := 'class MyClass {
+
+	| parser source res result |
+	parser := FASTTypeScriptParser new.
+	source := 'class MyClass {
         method1() { }
     }
     class OtherClass {
@@ -310,20 +311,20 @@ MatcherTests >> testRenameDefinitionOnly [
             obj.method1();
         }
     }'.
-    
-    res := parser parse: source.
-    
-    result := TSRenameMethodOperator new
-        oldName: 'method1';
-        newName: 'myMethod1';
-        source: source;
-        renameDefinitionOnly: res.
-    
-    "Definition renommée:"
-    self assert: (result includesSubstring: 'myMethod1').
-    
-    "OtherClass.method1 intact:"
-    self assert: (result includesSubstring: 'method1').
+
+	res := parser parse: source.
+
+	result := TSRenameMethodOperator new
+		          oldName: 'method1';
+		          newName: 'myMethod1';
+		          source: source;
+		          renameDefinitionOnly: res.
+
+	"Definition renommée:"
+	self assert: (result includesSubstring: 'myMethod1').
+
+	"OtherClass.method1 intact:"
+	self assert: (result includesSubstring: 'obj.method1')
 ]
 
 { #category : 'tests' }
