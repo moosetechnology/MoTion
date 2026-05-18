@@ -36,8 +36,27 @@ String >> asObjectPath [
 ]
 
 { #category : '*MoTion' }
+String >> higherOrEqualTo: aValue [
+
+	^ self -> (MatcherHigherOrEqualTo matching: aValue)
+]
+
+{ #category : '*MoTion' }
 String >> higherThan: aValue [
-    ^ self -> (MatcherHigherThan of: aValue)
+
+	^ self -> (MatcherHigherThan matching: aValue)
+]
+
+{ #category : '*MoTion' }
+String >> lessOrEqualTo: aValue [
+
+	^ self -> (MatcherLessThanOrEqualTo matching: aValue)
+]
+
+{ #category : '*MoTion' }
+String >> lessThan: aValue [
+
+	^ self -> (MatcherLessThan matching: aValue)
 ]
 
 { #category : '*MoTion' }
