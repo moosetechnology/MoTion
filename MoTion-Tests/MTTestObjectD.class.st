@@ -4,11 +4,24 @@ Class {
 	#instVars : [
 		'e',
 		'f',
-		'lint'
+		'lint',
+		'child'
 	],
 	#category : 'MoTion-Tests',
 	#package : 'MoTion-Tests'
 }
+
+{ #category : 'accessing' }
+MTTestObjectD >> child [
+
+	^ child
+]
+
+{ #category : 'accessing' }
+MTTestObjectD >> child: anObject [
+
+	child := anObject
+]
 
 { #category : 'accessing' }
 MTTestObjectD >> e: anE [

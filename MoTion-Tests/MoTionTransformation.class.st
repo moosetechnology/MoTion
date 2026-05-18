@@ -114,13 +114,13 @@ MoTionTransformation >> testRenommerMethode [
 
 	method := results first at: #foundMethod.
 
-	result := source
+	source := source
 		          copyReplaceAll: method name sourceCode
 		          with: 'myMethod1'.
 
-	self assert: (result includesSubstring: 'myMethod1').
-	self deny: (result includesSubstring: 'method1').
-	self assert: (result includesSubstring: 'method2')
+	self assert: (source includesSubstring: 'myMethod1').
+	self deny: (source includesSubstring: 'method1').
+	self assert: (source includesSubstring: 'method2')
 ]
 
 { #category : 'tests' }

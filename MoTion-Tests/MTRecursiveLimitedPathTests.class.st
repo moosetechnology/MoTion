@@ -14,16 +14,22 @@ Class {
 
 { #category : 'running' }
 MTRecursiveLimitedPathTests >> setUp [
-    super setUp.
-    d := MTTestObjectD new.
-    e := MTTestObjectE new.
-    f := MTTestObjectF new.
-    g := MTTestObjectG new.
-    h := MTTestObjectH new.
-    d e: e.
-    d f: f.
-    e g: g.
-    f h: h.
+
+	super setUp.
+	d := MTTestObjectD new.
+	e := MTTestObjectE new.
+	f := MTTestObjectF new.
+	g := MTTestObjectG new.
+	h := MTTestObjectH new.
+	d e: e.
+	d f: f.
+	e g: g.
+	f h: h.
+	d child: e.
+	e child: f.
+	f child: g.
+	g child: h.
+	h child: d.
 ]
 
 { #category : 'tests' }
@@ -31,6 +37,31 @@ MTRecursiveLimitedPathTests >> testAsObjectPathParsing [
     | path |
     path := #'e*2' asObjectPath.
     self assert: path class equals: MTRecursiveLimitedPath.
+]
+
+{ #category : 'tests' }
+MTRecursiveLimitedPathTests >> testChild2OnlyFollowsChildSlot [
+    | pattern result |
+    "F trouvé via child→child (depth 2) ✅"
+    pattern := MTTestObjectD
+               % { ('child*2' <=> (MTTestObjectF % {} as: #found)) }
+               as: #objectD.
+    result := pattern match: d.
+    self assert: result isMatch equals: true.   "← F trouvé ✅"
+
+    "E trouvé via child (depth 1) ✅"
+    pattern := MTTestObjectD
+               % { ('child*2' <=> (MTTestObjectE % {} as: #found)) }
+               as: #objectD.
+    result := pattern match: d.
+    self assert: result isMatch equals: true.   "← E trouvé ✅"
+
+    "G PAS trouvé — trop profond pour depth 2"
+    pattern := MTTestObjectD
+               % { ('child*2' <=> (MTTestObjectG % {} as: #found)) }
+               as: #objectD.
+    result := pattern match: d.
+    self assert: result isMatch equals: false.  "← G pas trouvé ✅"
 ]
 
 { #category : 'tests' }
@@ -87,6 +118,116 @@ MTRecursiveLimitedPathTests >> testDepthWithNonExistentPath [
     path := MTRecursiveLimitedPath of: #z depth: 2.
     result := path resolveFrom: a.
     self assertCollection: result hasSameElements: #().
+]
+
+{ #category : 'tests' }
+MTRecursiveLimitedPathTests >> testDtoDcomposedPath [
+
+ | pattern result |
+ pattern:= MTTestObjectD % { 
+     'f>child*2' <=> MTTestObjectH  % {  } as: #childH
+ } as: #objectD . 
+ result:= pattern match: d .
+ self assert: result isMatch equals: true.
+]
+
+{ #category : 'tests' }
+MTRecursiveLimitedPathTests >> testDtoDcomposedPathIncorrect [
+
+ | pattern result |
+ pattern:= MTTestObjectD % { 
+     'f>child*2' <=> MTTestObjectH  % {  } as: #childH
+ } as: #objectD . 
+ result:= pattern match: d .
+ self assert: result isMatch equals: true.
+]
+
+{ #category : 'tests' }
+MTRecursiveLimitedPathTests >> testDtoF [
+
+	| pattern result |
+	pattern := MTTestObjectD
+	           % { ('child*2' <=> MTTestObjectF % {  } as: #childF) }
+		           as: #objectD.
+	result := pattern match: d.
+	self assert: result isMatch equals: true
+]
+
+{ #category : 'tests' }
+MTRecursiveLimitedPathTests >> testDtoFIncorrect [
+
+	| pattern result |
+	pattern := MTTestObjectD
+	           % { ('child*3' <=> MTTestObjectF % {  } as: #childF) }
+		           as: #objectD.
+	result := pattern match: d.
+	self deny: result isMatch
+]
+
+{ #category : 'tests' }
+MTRecursiveLimitedPathTests >> testDtoFsevenTimes [
+"normalment c doit etre correct"
+ | pattern result |
+ pattern:= MTTestObjectD % { 
+     'child*7' <=> MTTestObjectF  % {  } as: #childF
+ } as: #objectD . 
+ result:= pattern match: d .
+ self assert: result isMatch equals: true.
+]
+
+{ #category : 'tests' }
+MTRecursiveLimitedPathTests >> testDtoFsevenTimesIncorrect [
+
+ | pattern result |
+ pattern:= MTTestObjectD % { 
+     'child*7' <=> MTTestObjectF  % {  } as: #childF
+ } as: #objectD . 
+ result:= pattern match: d .
+ self assert: result isMatch equals: true.
+]
+
+{ #category : 'tests' }
+MTRecursiveLimitedPathTests >> testDtoGsevenTimesIncorrect [
+
+	| pattern result |
+	pattern := MTTestObjectD
+	           % { ('child*8' <=> MTTestObjectG % {  } as: #childF) }
+		           as: #objectD.
+	result := pattern match: d.
+	self assert: result isMatch equals: true
+]
+
+{ #category : 'tests' }
+MTRecursiveLimitedPathTests >> testDtoHcomposedPath [
+
+ | pattern result |
+ pattern:= MTTestObjectD % { 
+     'f>child*3' <=> MTTestObjectH  % {  } as: #childH
+ } as: #objectD . 
+ result:= pattern match: d .
+ self assert: result isMatch equals: true.
+]
+
+{ #category : 'tests' }
+MTRecursiveLimitedPathTests >> testEtoDWildcardIncorrect [
+
+ | pattern result |
+ pattern:= MTTestObjectE % { 
+     '_*2' <=> MTTestObjectD  % {  } as: #childD
+ } as: #objectE . 
+ result:= pattern match: e .
+ self assert: result isMatch equals: true.
+]
+
+{ #category : 'tests' }
+MTRecursiveLimitedPathTests >> testEtoGWildcardCorrect [
+
+ | pattern result |
+ pattern:= MTTestObjectE % { 
+     '_*2' <=> MTTestObjectH  % {  } as: #childH
+ } as: #objectE . 
+ result:= pattern match: e .
+ self assert: result isMatch equals: true.
 ]
 
 { #category : 'tests' }
