@@ -209,6 +209,28 @@ MTRecursiveLimitedPathTests >> testDtoHcomposedPath [
 ]
 
 { #category : 'tests' }
+MTRecursiveLimitedPathTests >> testEToChild [
+
+	| pattern result |
+	pattern := MTTestObjectD
+	           % { (#'e>child' <=> MTTestObjectF % {  } as: #childF) }
+		           as: #objectD.
+	result := pattern match: d.
+	self assert: result isMatch equals: true
+]
+
+{ #category : 'tests' }
+MTRecursiveLimitedPathTests >> testEToHwithSupSymbol [
+
+	| pattern result |
+	pattern := MTTestObjectD
+	           % { (#'e>child*3' <=> MTTestObjectH % {  } as: #foundH) }
+		           as: #objectH.
+	result := pattern match: d.
+	self assert: result isMatch equals: true
+]
+
+{ #category : 'tests' }
 MTRecursiveLimitedPathTests >> testEtoDWildcardIncorrect [
 
  | pattern result |
@@ -220,6 +242,17 @@ MTRecursiveLimitedPathTests >> testEtoDWildcardIncorrect [
 ]
 
 { #category : 'tests' }
+MTRecursiveLimitedPathTests >> testEtoDWildcardIncorrects [
+
+	| pattern result |
+	pattern := MTTestObjectE
+	           % { ('_*2' <=> MTTestObjectD % {  } as: #childD) } as:
+		           #objectE.
+	result := pattern match: e.
+	self assert: result isMatch equals: true
+]
+
+{ #category : 'tests' }
 MTRecursiveLimitedPathTests >> testEtoGWildcardCorrect [
 
  | pattern result |
@@ -228,6 +261,56 @@ MTRecursiveLimitedPathTests >> testEtoGWildcardCorrect [
  } as: #objectE . 
  result:= pattern match: e .
  self assert: result isMatch equals: true.
+]
+
+{ #category : 'tests' }
+MTRecursiveLimitedPathTests >> testNegation [
+
+	| pattern result |
+	"Trouve D qui n'a PAS f = G"
+	pattern := MTTestObjectD % { (#f <~=> MTTestObjectG % {  }) }.
+	result := pattern match: d.
+	self assert: result isMatch
+]
+
+{ #category : 'tests' }
+MTRecursiveLimitedPathTests >> testNonLinear [
+
+	| pattern result |
+	"Trouve D où e et child pointent vers le même objet"
+	pattern := MTTestObjectD % {
+		           (#e <=> #'@same').
+		           (#child <=> #'@same') }.
+	result := pattern match: d.
+	self assert: result isMatch
+]
+
+{ #category : 'tests' }
+MTRecursiveLimitedPathTests >> testOrMatches [
+
+	| pattern result |
+	"Trouve D où child est E ou F"
+	pattern := MTTestObjectD
+	           %
+	           { (#child
+	            <=>
+	            (MTTestObjectE % {  } orMatches: MTTestObjectF % {  })) }.
+	result := pattern match: d.
+	self assert: result isMatch
+]
+
+{ #category : 'tests' }
+MTRecursiveLimitedPathTests >> testOrMatchesDtoEandF [
+
+	| pattern result |
+	"Trouve D où child est E ou F"
+	pattern := MTTestObjectD
+	           %
+	           { (#child
+	            <=>
+	            (MTTestObjectE % {  } orMatches: MTTestObjectF % {  })) }.
+	result := pattern match: d.
+	self assert: result isMatch
 ]
 
 { #category : 'tests' }
