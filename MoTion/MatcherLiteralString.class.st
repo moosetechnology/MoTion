@@ -15,6 +15,11 @@ Class {
 	#tag : 'matcher'
 }
 
+{ #category : 'instance creation' }
+MatcherLiteralString class >> of: aString [
+    ^ self new value: aString
+]
+
 { #category : 'matching' }
 MatcherLiteralString >> match: aNewValue withContext: aContext [
 	 		
