@@ -9,13 +9,6 @@ Class {
 	#tag : 'matchers'
 }
 
-{ #category : 'running' }
-MatcherTests >> setUp [
-    parser := FASTTypeScriptParser new.
-
-	
-]
-
 { #category : 'tests' }
 MatcherTests >> testHigherOrEqualThanMoTionDirect [
 
