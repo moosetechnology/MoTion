@@ -13,6 +13,13 @@ MatcherLiteralNumber class >> matching: aValue [
   yourself 
 ]
 
+{ #category : 'instance creation' }
+MatcherLiteralNumber class >> of: aValue [ 
+	   ^ self new
+		  value: aValue;
+		  yourself
+]
+
 { #category : 'matching' }
 MatcherLiteralNumber >> match: aNewValue withContext: aContext [
 	 		
