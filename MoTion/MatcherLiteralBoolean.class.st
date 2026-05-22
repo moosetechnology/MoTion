@@ -6,6 +6,12 @@ Class {
 	#tag : 'matcher'
 }
 
+{ #category : 'instance creation' }
+MatcherLiteralBoolean class >> of: aBoolean [
+
+	^ self new value: aBoolean 
+]
+
 { #category : 'matching' }
 MatcherLiteralBoolean >> match: aValue withContext: aContext [
 
