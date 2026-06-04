@@ -48,6 +48,16 @@ String >> higherThan: aValue [
 ]
 
 { #category : '*MoTion' }
+String >> isValidRegex [
+	
+	"Returns true if self is a valide regex and false if not"
+
+    ^[ self asRegex. true ] 
+        on: Error 
+        do: [ false ]
+]
+
+{ #category : '*MoTion' }
 String >> lessOrEqualTo: aValue [
 
 	^ self -> (MatcherLessThanOrEqualTo matching: aValue)

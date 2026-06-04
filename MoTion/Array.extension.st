@@ -16,3 +16,9 @@ Array >> orMatches: aMatcher [
 
 	^ OrMatcher between: self asMatcher and: aMatcher asMatcher
 ]
+
+{ #category : '*MoTion' }
+Array >> orderIgnored [
+
+	^  MatcherSet  of: (self collect: #asMatcher).
+]
