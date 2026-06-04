@@ -36,14 +36,12 @@ MatcherCollection class >> of: aMatcherSequence [
 ]
 
 { #category : 'matching' }
-MatcherCollection >> hasListWildcards [
-
+MatcherCollection >> hasListWildcards [ 
 	^ self listWildcardPositions isNotEmpty
 ]
 
 { #category : 'matching' }
 MatcherCollection >> initializeCursor: aMotionCursor withCollection: aCollection andOriginalContext: originalContext [
-
 	aMotionCursor
 		initializeForMatcher: self
 		withCollection: aCollection
@@ -58,7 +56,7 @@ MatcherCollection >> isCollectionMatcher [
 { #category : 'matching' }
 MatcherCollection >> listWildcardPositions [
 
-	| positions |
+	| positions | 
 	positions := OrderedCollection new.
 	matcherSequence doWithIndex: [ :e :i | 
 		e isListWildcard ifTrue: [ positions add: i ] ].
@@ -69,7 +67,7 @@ MatcherCollection >> listWildcardPositions [
 MatcherCollection >> match: aCollection withContext: aMatchingContext [
 
 	| motionCursor results combinationFound |
-	"results is a collection of matchingContexts"
+	"results is a collection of matchingContexts" 
 	results := OrderedCollection new.
 
 	"initilazing the motionCursor"
