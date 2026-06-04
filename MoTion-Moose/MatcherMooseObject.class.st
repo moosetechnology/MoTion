@@ -1,10 +1,12 @@
 Class {
-	#name : #MatcherMooseObject,
-	#superclass : #MatcherObject,
-	#category : #'MoTion-Moose-matcher'
+	#name : 'MatcherMooseObject',
+	#superclass : 'MatcherObject',
+	#category : 'MoTion-Moose-matcher',
+	#package : 'MoTion-Moose',
+	#tag : 'matcher'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 MatcherMooseObject class >> type: aClass withProperties: aPropertiesArray [
 
 	| properties |
@@ -16,8 +18,13 @@ MatcherMooseObject class >> type: aClass withProperties: aPropertiesArray [
 		  yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 MatcherMooseObject >> isMooseMatcher [
 
 	^ true
+]
+
+{ #category : 'accessing' }
+MatcherMooseObject >> properties [
+    ^ properties
 ]

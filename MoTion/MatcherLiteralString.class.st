@@ -15,6 +15,11 @@ Class {
 	#tag : 'matcher'
 }
 
+{ #category : 'instance creation' }
+MatcherLiteralString class >> of: aString [
+    ^ self new value: aString
+]
+
 { #category : 'matching' }
 MatcherLiteralString >> match: aNewValue withContext: aContext [
 	"a String matcher can either fully match a String, can be found inside another String or can be available in a list of Strings. So the first condition is used to match only one String fully or if exists in a long string, while the second one is checking if the String exists in a collection of given Strings. If a match is found, aContext isMatch is returned as True. "

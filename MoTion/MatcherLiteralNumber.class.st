@@ -6,6 +6,20 @@ Class {
 	#tag : 'matcher'
 }
 
+{ #category : 'as yet unclassified' }
+MatcherLiteralNumber class >> matching: aValue [
+ ^self new 
+  value: aValue ; 
+  yourself 
+]
+
+{ #category : 'instance creation' }
+MatcherLiteralNumber class >> of: aValue [ 
+	   ^ self new
+		  value: aValue;
+		  yourself
+]
+
 { #category : 'matching' }
 MatcherLiteralNumber >> match: aNewValue withContext: aContext [
 	 		
