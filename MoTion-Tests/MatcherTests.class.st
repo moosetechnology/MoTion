@@ -12,14 +12,13 @@ Class {
 { #category : 'tests' }
 MatcherTests >> testHigherOrEqualThanMoTionDirect [
 
-    | pattern a |
-    a := MTTestObjectA new.
-    a lint: 100.
-    pattern := MTTestObjectA % { (#lint higherOrEqualTo: 100) }.
-    self assert: (pattern match: a) isMatch.
-    
-    a lint: 50.
-    self deny: (pattern match: a) isMatch.
+	| pattern a |
+	a := MTTestObjectA new.
+	a lint: 100.
+	pattern := MTTestObjectA % { (#lint higherOrEqualTo: 100) }.
+	self assert: (pattern match: a) isMatch.
+	a lint: 50.
+	self deny: (pattern match: a) isMatch
 ]
 
 { #category : 'tests' }

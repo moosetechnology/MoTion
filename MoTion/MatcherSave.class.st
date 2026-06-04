@@ -36,6 +36,11 @@ MatcherSave >> match: anObject withContext: aContext [
 ]
 
 { #category : 'accessing' }
+MatcherSave >> matcher [
+    ^ matcher
+]
+
+{ #category : 'accessing' }
 MatcherSave >> matcher: aMatcher [
 
 	matcher := aMatcher
