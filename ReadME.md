@@ -66,7 +66,7 @@ ClassA % {
 ```
 This pattern first match an instance of ClassA, then it takes the object in its property1 and the value in property2 of this second object. This value should match aValue. This notation allows to express in a very concise way a path in a graph of objects. Note that this operator is also polymorphic. Similarly to “<=>”, if one of the objects in the path is a collection, the operator will look for an element of this collection that allows to continue the search, that is to say that has a property matching the remaining part of the pattern.
 
-11. MoTion allows to perform Recursive traversal through a “*” operator combined with the Path traversal operator “>”. In a chain of objects, one may know the initial property and the final one, but not know how long the chain of objects is.
+11.1 MoTion allows to perform Recursive traversal through a “*” operator combined with the Path traversal operator “>”. In a chain of objects, one may know the initial property and the final one, but not know how long the chain of objects is.
 ```Smalltalk
 ClassA % {
 #’property1>repeatedProp*’ <=> aValue.
@@ -74,6 +74,14 @@ ClassA % {
 ```
 This pattern will match first an instance of ClassA, then the object in its property property1 then it will match a chain of objects all having a property repeatedProp and one of them containing the value aValue. The match ends on this last
 object.
+
+11.2 MoTion allows to perform Limited Recursive traversal through a “*Number” operator combined with the Path traversal operator “>”. In a chain of objects, one may know the initial property and the final one, but not know how long the chain of objects is. Also to avoid looking infinitly (specially when we have loops for properties pointing to each others). 
+```Smalltalk
+ClassA % {
+#’property1>repeatedProp*3’ <=> aValue.
+}
+```
+This pattern will matches ans stops on the 3rd layer, whether ther is or isn't a match. 
 
 12. The “*” operator may also be combined with a wildcard (“_”).
 ```Smalltalk
