@@ -11,6 +11,13 @@ Class {
 	#tag : 'matchers'
 }
 
+{ #category : 'instance creation' }
+CaseMatcher class >> of: aValue [ 
+	   ^ self new
+		  value: aValue;
+		  yourself
+]
+
 { #category : 'running' }
 CaseMatcher >> setUp [ 
 

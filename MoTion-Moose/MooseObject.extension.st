@@ -1,6 +1,6 @@
-Extension { #name : #MooseObject }
+Extension { #name : 'MooseObject' }
 
-{ #category : #'*MoTion-Moose' }
+{ #category : '*MoTion-Moose' }
 MooseObject >> computeAllChildren [
 
 	| allChildren |
@@ -10,7 +10,7 @@ MooseObject >> computeAllChildren [
 	^ allChildren 
 ]
 
-{ #category : #'*MoTion-Moose' }
+{ #category : '*MoTion-Moose' }
 MooseObject >> computeChildren [
 
 	| childrenProperties |

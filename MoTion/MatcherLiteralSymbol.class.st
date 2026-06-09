@@ -6,6 +6,11 @@ Class {
 	#tag : 'matcher'
 }
 
+{ #category : 'instance creation' }
+MatcherLiteralSymbol class >> of: aSymbol [
+    ^ self new value: aSymbol
+]
+
 { #category : 'matching' }
 MatcherLiteralSymbol >> match: aNewValue withContext: aContext [
 

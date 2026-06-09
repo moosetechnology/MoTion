@@ -12,14 +12,6 @@ Class {
 	#tag : 'matcher'
 }
 
-{ #category : 'instance creation' }
-MatcherLiteral class >> of: aValue [
-
-	^ self new
-		  value: aValue;
-		  yourself
-]
-
 { #category : 'inspecting' }
 MatcherLiteral >> inspectionDescription [
 

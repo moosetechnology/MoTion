@@ -1,10 +1,80 @@
 Class {
 	#name : 'MatcherTests',
 	#superclass : 'TestCase',
+	#instVars : [
+		'parser'
+	],
 	#category : 'MoTion-Tests-matchers',
 	#package : 'MoTion-Tests',
 	#tag : 'matchers'
 }
+
+{ #category : 'tests' }
+MatcherTests >> testHigherOrEqualThanMoTionDirect [
+
+	| pattern a |
+	a := MTTestObjectA new.
+	a lint: 100.
+	pattern := MTTestObjectA % { (#lint higherOrEqualTo: 100) }.
+	self assert: (pattern match: a) isMatch.
+	a lint: 50.
+	self deny: (pattern match: a) isMatch
+]
+
+{ #category : 'tests' }
+MatcherTests >> testHigherThanWithMoTion [
+    | pattern a matcher |
+    a := MTTestObjectA new.
+    a lint: 150.
+    matcher := MatcherHigherThan new.
+    matcher value: 100.
+    pattern := MTTestObjectA % {
+        #lint <=> matcher         "on fait comme ça car HigherThan ne marche pas sur Object, on a pu definir MatcherHigherThan inside btw"
+    }.
+    self assert: (pattern match: a) isMatch.
+    
+    a lint: 50.
+    self deny: (pattern match: a) isMatch.
+]
+
+{ #category : 'tests' }
+MatcherTests >> testHigherThanWithMoTionDirect [
+    | pattern a |
+    a := MTTestObjectA new.
+    a lint: 150.
+    pattern := MTTestObjectA % {
+        (#lint higherThan: 100)
+    }.
+    self assert: (pattern match: a) isMatch.
+    
+    a lint: 50.
+    self deny: (pattern match: a) isMatch.
+]
+
+{ #category : 'tests' }
+MatcherTests >> testLessThanWithMoTionDirect [
+    | pattern a |
+    a := MTTestObjectA new.
+    a lint: 50.
+    pattern := MTTestObjectA % { (#lint lessThan: 100) }.
+    self assert: (pattern match: a) isMatch.
+    
+    a lint: 150.
+    self deny: (pattern match: a) isMatch.
+]
+
+{ #category : 'tests' }
+MatcherTests >> testLessrOrEqualThanMoTionDirect [
+
+	| pattern a |
+	a := MTTestObjectA new.
+	a lint: 100.
+	pattern := MTTestObjectA % { (#lint lessOrEqualTo: 100) }.
+	self assert: (pattern match: a) isMatch.
+
+	a lint: 150.
+	self deny: (pattern match: a) isMatch
+]
 
 { #category : 'tests' }
 MatcherTests >> testMatcherBoolean [
@@ -14,6 +84,45 @@ MatcherTests >> testMatcherBoolean [
 
 	self assert: (matcher match: true) isMatch.
 	self deny: (matcher match: false) isMatch
+]
+
+{ #category : 'tests' }
+MatcherTests >> testMatcherHigherOrEqualTo [
+    | myMatcher |
+    myMatcher := MatcherHigherOrEqualTo new.
+    myMatcher value: 100.
+    self assert: (myMatcher match: 100) isMatch.
+    self assert: (myMatcher match: 150) isMatch.
+    self deny: (myMatcher match: 50) isMatch.
+
+]
+
+{ #category : 'tests' }
+MatcherTests >> testMatcherHigherThan [
+    | myMatcher |
+    myMatcher := MatcherHigherThan new.
+    myMatcher value: 100.
+    self assert: (myMatcher match: 150) isMatch.
+    self deny: (myMatcher match: 50) isMatch.
+]
+
+{ #category : 'tests' }
+MatcherTests >> testMatcherLessThan [
+    | myMatcher |
+    myMatcher := MatcherLessThan new.
+    myMatcher value: 100.
+    self assert: (myMatcher match: 50) isMatch.
+    self deny: (myMatcher match: 150) isMatch.
+]
+
+{ #category : 'tests' }
+MatcherTests >> testMatcherLessThanOrEqualTo [
+    | myMatcher |
+    myMatcher := MatcherLessThanOrEqualTo new.
+    myMatcher value: 100.
+    self assert: (myMatcher match: 100) isMatch.
+    self assert: (myMatcher match: 50) isMatch.
+    self deny: (myMatcher match: 150) isMatch.
 ]
 
 { #category : 'tests' }
@@ -38,11 +147,12 @@ MatcherTests >> testMatcherNumber [
 
 { #category : 'tests' }
 MatcherTests >> testMatcherNumberCollection [
+
 	| myMatcher |
-	myMatcher := MatcherLiteralNumber of: 100.
-	 
-	self assert: (myMatcher match: {100. 200. 300 }) isMatch.
-	self deny: (myMatcher match: 900) isMatch 
+	myMatcher := MatcherLiteralNumber matching: 100.
+
+	self assert: (myMatcher match: { 100. 200. 300 }) isMatch.
+	self deny: (myMatcher match: 900) isMatch
 ]
 
 { #category : 'tests' }
