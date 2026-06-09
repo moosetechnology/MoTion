@@ -20,6 +20,12 @@ MatcherLiteral class >> of: aValue [
 		  yourself
 ]
 
+{ #category : 'inspecting' }
+MatcherLiteral >> inspectionDescription [
+
+	^ value printString
+]
+
 { #category : 'accessing' }
 MatcherLiteral >> value [
 

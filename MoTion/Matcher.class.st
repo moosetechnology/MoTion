@@ -60,6 +60,18 @@ Matcher >> debugMe [
 	^ MatcherDebug of: self
 ]
 
+{ #category : 'inspecting' }
+Matcher >> inspectUsing: anInstance [
+
+	^ MatcherInspector inspect: self using: anInstance
+]
+
+{ #category : 'inspecting' }
+Matcher >> inspectionDescription [
+
+	^ self printString
+]
+
 { #category : 'matching' }
 Matcher >> isBlockMatcher [
 

@@ -1,6 +1,6 @@
 Class {
 	#name : 'PharoBlockMatcherCompiler',
-	#superclass : 'RBProgramNodeVisitor',
+	#superclass : 'OCProgramNodeVisitor',
 	#category : 'MoTion-visitors',
 	#package : 'MoTion',
 	#tag : 'visitors'

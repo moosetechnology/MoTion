@@ -39,13 +39,32 @@ Class {
 { #category : 'instance creation' }
 MatcherObject class >> type: aClass withProperties: aPropertiesArray [
 
-	| properties |
-	properties := aPropertiesArray collect: [ :each | 
-		              each key asObjectPath -> each value asMatcher ].
-	^ self new
-		  type: aClass;
-		  properties: properties;
-		  yourself
+	| properties matcher |
+	properties := aPropertiesArray collect: [ :each |
+			              | valueMatcher association |
+			              valueMatcher := each value asMatcher.
+			              MatcherOriginalDescriptionStore
+				              captureDescription:
+					              (MatcherOriginalDescriptionStore
+						               descriptionForOriginalPart: each value)
+				              for: valueMatcher.
+			              association := each key asObjectPath -> valueMatcher.
+			              MatcherOriginalDescriptionStore
+				              captureDescription:
+				              (MatcherOriginalDescriptionStore
+					               descriptionForOriginalPart: each)
+				              for: association.
+			              association ].
+	matcher := self new
+		           type: aClass;
+		           properties: properties;
+		           yourself.
+	MatcherOriginalDescriptionStore
+		captureMatcherDescriptionFor: matcher
+		class: aClass
+		properties: aPropertiesArray
+		subclassmatch: false.
+	^ matcher
 ]
 
 { #category : 'initialization' }
@@ -54,6 +73,14 @@ MatcherObject >> initialize [
 	super initialize.
 	properties := OrderedCollection new.
 	subclassmatch := false
+]
+
+{ #category : 'inspecting' }
+MatcherObject >> inspectionDescription [
+
+	^ type name , (subclassmatch
+		   ifTrue: [ ' %% { ... }' ]
+		   ifFalse: [ ' % { ... }' ])
 ]
 
 { #category : 'matching' }

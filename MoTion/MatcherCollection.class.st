@@ -48,6 +48,12 @@ MatcherCollection >> initializeCursor: aMotionCursor withCollection: aCollection
 		andOriginalContext: originalContext
 ]
 
+{ #category : 'inspecting' }
+MatcherCollection >> inspectionDescription [
+
+	^ '{ ... }'
+]
+
 { #category : 'matching' }
 MatcherCollection >> isCollectionMatcher [
 	^ true

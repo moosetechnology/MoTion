@@ -9,7 +9,9 @@ Association >> % matcherProperties [
 { #category : '*MoTion' }
 Association >> %% matcherProperties [
 
-	self value: self value %% matcherProperties
+	self value: self value %% matcherProperties.
+	MatcherOriginalDescriptionStore captureAssociationDescriptionFor:
+		self
 ]
 
 { #category : '*MoTion' }

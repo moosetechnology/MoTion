@@ -28,6 +28,12 @@ MatcherSave >> alias: aSymbol [
 	alias := aSymbol
 ]
 
+{ #category : 'inspecting' }
+MatcherSave >> inspectionDescription [
+
+	^ matcher inspectionDescription , ' as: ' , alias printString
+]
+
 { #category : 'accessing' }
 MatcherSave >> match: anObject withContext: aContext [
 
