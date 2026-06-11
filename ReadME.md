@@ -138,6 +138,15 @@ ClassA % {
 ```
 This pattern matches an instance of ClassA with a property someProperty matching the value 5 or the value 6.
 
+17. Comparison to Numbers can be applied now after the conribution of @AminRannen, using operators like: #higherThan:, #lowerThan:, lessOrEqualTo: and higherOrEqualTo:
+    For example:
+```Smalltalk
+ClassA % {
+   #someProperty higherThan: 10
+}
+```
+
+
 ## How to use the matcher
 
 1. One gets a “matcher” by calling the asMatcher
