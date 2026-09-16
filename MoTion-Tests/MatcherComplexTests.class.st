@@ -131,7 +131,6 @@ MatcherComplexTests >> testToDiscoverVariableIncrements [
 			              (#'selector>value' <=> #+).
 			              (#'arguments>value' <=> 1).
 			              (#receiver <=> #'@name') }) as: #node) }) }.
-			self halt.
 
 	result := matcher match: method.
 	self assert: result isMatch.
