@@ -8,8 +8,7 @@ Class {
 { #category : 'baselines' }
 BaselineOfMoTion >> baseline: spec [
     <baseline>
-    spec for: #common do: [
-        "External dependency"
+    spec for: #common do: [ 
         spec
             baseline: 'FASTTypeScript'
             with: [
@@ -19,7 +18,7 @@ BaselineOfMoTion >> baseline: spec [
             package: #MoTion;
             package: #'MoTion-Tests' with: [ spec requires: #( 'MoTion' ) ];
             package: #'MoTion-Moose' with: [ spec requires: #( 'MoTion' ) ];
-            package: #'MoTion-FAST-Transformation' with: [ spec requires: #( 'MoTion' 'FASTTypeScript' ) ];
+            package: #'MoTion-FAST-Transformation' with: [ spec requires: #( 'MoTion' 'FASTTypeScript') ];
             package: #'MoTion-FAST-Transformation-Tests' with: [ spec requires: #( 'MoTion-FAST-Transformation' ) ].
 
         spec group: 'default' with: #( 'MoTion' 'MoTion-Tests' ).
