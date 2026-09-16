@@ -125,12 +125,13 @@ MatcherComplexTests >> testToDiscoverVariableIncrements [
 	z ifTrue: [y := y + 1].
 	x := 1 + x'.
 
-	matcher := RBMethodNode % { (#'children*' <=> RBAssignmentNode % { 
+	matcher := RBMethodNode % { (#'children*' <=> RBAssignmentNode % {
 		            (#variable <=> #'@name').
-		            (#value <=> (RBMessageNode % { 
+		            (#value <=> (RBMessageNode % {
 			              (#'selector>value' <=> #+).
 			              (#'arguments>value' <=> 1).
 			              (#receiver <=> #'@name') }) as: #node) }) }.
+			self halt.
 
 	result := matcher match: method.
 	self assert: result isMatch.

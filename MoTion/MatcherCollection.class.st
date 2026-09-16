@@ -71,34 +71,34 @@ MatcherCollection >> listWildcardPositions [
 
 { #category : 'matching' }
 MatcherCollection >> match: aCollection withContext: aMatchingContext [
-
-	| motionCursor results combinationFound |
-	"results is a collection of matchingContexts" 
-	results := OrderedCollection new.
-
-	"initilazing the motionCursor"
-	motionCursor := MotionCursor new.
-	self
-		initializeCursor: motionCursor
-		withCollection: aCollection
-		andOriginalContext: aMatchingContext.
-
-	[ motionCursor hasNext ] whileTrue: [ "We enter this loop each time a combination is found to reset combination params in moTionCursor.""restting combination params "
-		combinationFound := false.
-
-		[ combinationFound not and: motionCursor hasNext ] whileTrue: [ "here we are looping until there are no combinations found. 
-			results can contains false and true matchingContexts; true macthingContexts will be filtered when isMatch is called only."
-			combinationFound := self
-				                    matchNext: aCollection
-				                    withCursor: motionCursor
-				                    withContexts:
-				                    motionCursor contextForCurrentPattern
-				                    originalContext: aMatchingContext ].
-
-		combinationFound ifTrue: [ 
-			results addAll: motionCursor contextForCurrentPattern ].
-		motionCursor forward: false ].
-	^ results asArray
+    | motionCursor results combinationFound sortedCollection |
+    
+    "trier par startPos si les éléments ont startPos"
+    sortedCollection := (aCollection allSatisfy: [:e | e respondsTo: #startPos])
+        ifTrue: [ aCollection asSortedCollection: [:a :b | a startPos < b startPos] ]
+        ifFalse: [ aCollection ].
+    
+    "results is a collection of matchingContexts"
+    results := OrderedCollection new.
+    "initilazing the motionCursor"
+    motionCursor := MotionCursor new.
+    self
+        initializeCursor: motionCursor
+        withCollection: sortedCollection
+        andOriginalContext: aMatchingContext.
+    [ motionCursor hasNext ] whileTrue: [
+        combinationFound := false.
+        [ combinationFound not and: motionCursor hasNext ] whileTrue: [
+            combinationFound := self
+                                    matchNext: sortedCollection
+                                    withCursor: motionCursor
+                                    withContexts:
+                                    motionCursor contextForCurrentPattern
+                                    originalContext: aMatchingContext ].
+        combinationFound ifTrue: [
+            results addAll: motionCursor contextForCurrentPattern ].
+        motionCursor forward: false ].
+    ^ results asArray
 ]
 
 { #category : 'matching' }

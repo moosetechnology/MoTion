@@ -18,6 +18,14 @@ MatcherMooseObject class >> type: aClass withProperties: aPropertiesArray [
 		  yourself
 ]
 
+{ #category : 'operations' }
+MatcherMooseObject >> @ anAlias [
+    ^ MatcherSave new
+        alias: anAlias;
+        matcher: self;
+        yourself
+]
+
 { #category : 'testing' }
 MatcherMooseObject >> isMooseMatcher [
 
@@ -27,4 +35,9 @@ MatcherMooseObject >> isMooseMatcher [
 { #category : 'accessing' }
 MatcherMooseObject >> properties [
     ^ properties
+]
+
+{ #category : 'accessing' }
+MatcherMooseObject >> type [
+    ^ type
 ]
