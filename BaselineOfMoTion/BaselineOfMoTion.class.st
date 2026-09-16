@@ -14,6 +14,6 @@ BaselineOfMoTion >> baseline: spec [
             package: #'MoTion-Tests' with: [ spec requires: #( 'MoTion' ) ];
             package: #'MoTion-Moose' with: [ spec requires: #( 'MoTion' ) ];
             package: 'MoTion-FAST-Transformation' with: [ spec requires: #( 'MoTion' ) ].
-        spec group: 'default' with: #( 'MoTion' 'MoTion-Tests' 'MoTion-FAST-Transformation' ).
+        spec group: 'default' with: #( 'MoTion' 'MoTion-Tests' ).
         spec group: 'MoTionMoose' with: #( 'default' 'MoTion-Moose' ) ]
 ]
