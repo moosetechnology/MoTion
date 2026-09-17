@@ -39,6 +39,27 @@ MoTionRule >> bindings: anObject [
 ]
 
 { #category : 'as yet unclassified' }
+MoTionRule >> collectAllBindings [ 
+
+	| results collect |
+	
+	results := OrderedCollection new.
+	collect := nil.
+	collect := [:obj |
+		(obj isKindOf: MatcherSave) ifTrue: [
+			results add: obj.
+			collect value: obj matcher ].
+		(obj isKindOf: MatcherWildcard) ifTrue: [
+			results add: obj ].
+		(obj isKindOf: MatcherCollection) ifTrue: [
+			results add: obj. ].
+		(obj isKindOf: MatcherObject) ifTrue: [
+			obj properties do: [:assoc | collect value: assoc value] ] ].
+	collect value: sourcePattern .
+	^ results
+]
+
+{ #category : 'as yet unclassified' }
 MoTionRule >> executeOnFirst [
     | matches node newSource newModel |
     matches := self sourcePattern
