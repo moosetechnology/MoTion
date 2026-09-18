@@ -120,9 +120,18 @@ MoTionRule >> executeRefactorings [
 
 	changes := OrderedCollection new.
 	
-	matches do:[ :eachMatch |
-		bindings keysDo: [ :eachBind |
-			changes add: (Association key: (eachMatch at: eachBind) value: (bindings at: eachBind))	
+	matches do:[ :eachMatch | 
+		bindings keysDo: [ :eachKey |
+			self halt. 
+		((eachMatch at: eachKey) isKindOf: MooseEntity ) ifTrue: [  
+			"here I have to check if we have a value or a node. if node continue, if value, check the enclosing param of the binding and match again to find a node and pass it here to create the association. "  
+			changes add: (Association key: (eachMatch at: eachKey) value: (bindings at: eachKey)) 
+			] ifFalse: [
+				|newMatcher|
+				self halt.
+				newMatcher := self enclosingMatcherForAlias:  eachKey in: sourcePattern.
+				"perhaps we can filter the entities from the model following the type of the found node"
+			]. 	
 		]. 
 	].
 	
