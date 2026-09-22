@@ -23,6 +23,6 @@ MatcherListWildcard >> match: aNewValue withContext: aMatchingContext [
 		           aMatchingContext isMatch: true.
 		           aNewValue ].
 	aMatchingContext isMatch: aResult = aNewValue.
-
+	
 	^ { aMatchingContext }
 ]

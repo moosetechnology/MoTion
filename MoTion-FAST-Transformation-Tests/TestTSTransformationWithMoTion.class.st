@@ -257,7 +257,7 @@ TestTSTransformationWithMoTion >> testRefactoringClassAndMethodUsingAs [
 	rule bindings: {
 			(#className -> 'AdvancedCalculator').
 			(#methodName -> 'calculate') } asDictionary.
-	newSource := rule executeWithBindings.
+	newSource := rule executeRefactorings.
 	newModel := parser parse: newSource.
 	self assert:
 		((newModel allWithType: FASTTypeScriptClassDeclaration) anySatisfy: [
@@ -287,7 +287,7 @@ TestTSTransformationWithMoTion >> testRefactoringMultipleParamsInList [
         (#p2 -> 'b: number').
         (#p3 -> 'c: number').
         (#p4 -> 'd: number') } asDictionary.
-    newSource := rule executeWithBindings.
+    newSource := rule executeRefactorings.
     newModel := parser parse: newSource.
     method := (newModel allWithType: FASTTypeScriptMethodDefinition)
         detect: [:m | m name sourceCode = 'compute'].
@@ -317,7 +317,7 @@ TestTSTransformationWithMoTion >> testRefactoringParamsAndListInCollection [
         (#p1 -> 'a: number').
         (#p2 -> 'b: number').
         (#rest -> 'c: number') } asDictionary.
-    newSource := rule executeWithBindings.
+    newSource := rule executeRefactorings.
     newModel := parser parse: newSource.
     method := (newModel allWithType: FASTTypeScriptMethodDefinition)
         detect: [:m | m name sourceCode = 'compute'].
@@ -358,7 +358,7 @@ TestTSTransformationWithMoTion >> testRefactoringUsingAsAndListParams [
         (#methodName -> 'raiseToPower').
         (#p1 -> 'base').
         (#p2 -> 'exp') } asDictionary.
-    newSource := rule executeWithBindings.
+    newSource := rule executeRefactorings.
     newModel := parser parse: newSource.
     renamedClass := (newModel allWithType: FASTTypeScriptClassDeclaration)
         detect: [:c | c name sourceCode = 'ScientificCalculator']
@@ -403,7 +403,7 @@ TestTSTransformationWithMoTion >> testRefactoringUsingDifferentBindingTypes [
         (#p2 -> 'b: number').
         (#p3 -> 'c: number').
         (#p4 -> 'd: number') } asDictionary.
-    newSource := rule executeWithBindings.
+    newSource := rule executeRefactorings.
     newModel := parser parse: newSource.
     self assert: ((newModel allWithType: FASTTypeScriptClassDeclaration)
         anySatisfy: [:c | c name sourceCode = 'SuperCalculator']).
@@ -528,7 +528,7 @@ TestTSTransformationWithMoTion >> testRenameClass [
 	rule bindings: { (#className -> 'Calculator222') } asDictionary.
 	"execute the Rule and get the new Source"
 
-	newSource := rule executeWithBindings.
+	newSource := rule executeRefactorings.
 	"Parse the new Source Code and verify the new class named modified"
 	newModel := parser parse: newSource.
 	self
@@ -565,7 +565,7 @@ TestTSTransformationWithMoTion >> testRenameClassAndMethod [
 	rule bindings: { (#methodName -> 'multiplication').
 	                 (#className -> 'Calculator666') } asDictionary.
 	"execute the Rule and get the new Source"
-	newSource := rule executeWithBindings.
+	newSource := rule executeRefactorings.
 	"Parse the new Source Code and verify the new class named modified"
 	newModel := parser parse: newSource.
 	self assert:
@@ -597,7 +597,7 @@ TestTSTransformationWithMoTion >> testRenameClassAndMethodWildcard [
     rule bindings: {
         (#methodName -> 'multiplication').
         (#className -> 'CalculatorNew') } asDictionary.
-    newSource := rule executeWithBindings.
+    newSource := rule executeRefactorings.
     newModel := parser parse: newSource.
     self assert:
         ((newModel allWithType: FASTTypeScriptMethodDefinition) anySatisfy: [
@@ -628,7 +628,7 @@ TestTSTransformationWithMoTion >> testRenameMethod [
 	"Precise the binding and the new Name of the class "
 	rule bindings: { (#methodName -> 'multiplication') } asDictionary.
 	"execute the Rule and get the new Source"
-	newSource := rule executeWithBindings.
+	newSource := rule executeRefactorings.
 	"Parse the new Source Code and verify the new class named modified"
 	newModel := parser parse: newSource.
     self assert:
@@ -655,7 +655,7 @@ TestTSTransformationWithMoTion >> testRenameMethodParameters [
 	rule bindings: {
 			(#p1 -> 'x: number').
 			(#p2 -> 'y: number') } asDictionary.
-	newSource := rule executeWithBindings.
+	newSource := rule executeRefactorings.
 	newModel := parser parse: newSource.
 	method := (newModel allWithType: FASTTypeScriptMethodDefinition)
 		          detect: [ :m | m name sourceCode = 'power' ].
@@ -686,7 +686,7 @@ TestTSTransformationWithMoTion >> testReplaceRestWithNewParams [
     rule bindings: {
         (#rest -> 'c: string')
     } asDictionary.
-    newSource := rule executeWithBindings.
+    newSource := rule executeRefactorings.
     newModel := parser parse: newSource.
     method := (newModel allWithType: FASTTypeScriptMethodDefinition)
         detect: [:m | m name sourceCode = 'add'].
@@ -713,7 +713,7 @@ TestTSTransformationWithMoTion >> testReplaceRestWithNewParamsExecute [
 	rule model: method.
 	rule source: sourceCode.
 	rule bindings: { (#rest -> 'c: string') } asDictionary.
-	newSource := rule executeWithBindings.
+	newSource := rule executeRefactorings.
 	newModel := parser parse: newSource.
 	method := (newModel allWithType: FASTTypeScriptMethodDefinition)
 		          detect: [ :m | m name sourceCode = 'add' ].
