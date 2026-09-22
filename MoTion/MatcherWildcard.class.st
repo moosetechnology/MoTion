@@ -59,6 +59,14 @@ MatcherWildcard >> match: aNewValue withContext: aMatchingContext [
 		           aMatchingContext isMatch: true.
 		           aNewValue ].
 	aMatchingContext isMatch: aResult = aNewValue.
+	
+	"checking if the current node is literal or not. if yes add new binding and fill it with the parent node of the current match. this is useful for the refactoring."
+	
+	(aNewValue respondsTo: #startPos) ifFalse: [
+		aMatchingContext currentPropertyOwner ifNotNil: [ :owner |
+			aMatchingContext bindings
+				at: (alias , 'Node') asSymbol
+				ifAbsentPut: [ owner ] ] ].	
 
 	^ { aMatchingContext }
 ]

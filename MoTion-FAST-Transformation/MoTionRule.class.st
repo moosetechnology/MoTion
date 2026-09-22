@@ -122,21 +122,16 @@ MoTionRule >> executeRefactorings [
 	
 	matches do:[ :eachMatch | 
 		bindings keysDo: [ :eachKey |
-			self halt. 
-		((eachMatch at: eachKey) isKindOf: MooseEntity ) ifTrue: [  
+		((eachMatch at: eachKey) respondsTo: #startPos ) ifTrue: [  
 			"here I have to check if we have a value or a node. if node continue, if value, check the enclosing param of the binding and match again to find a node and pass it here to create the association. "  
 			changes add: (Association key: (eachMatch at: eachKey) value: (bindings at: eachKey)) 
-			] ifFalse: [
-				|newMatcher|
-				self halt.
-				newMatcher := self enclosingMatcherForAlias:  eachKey in: sourcePattern.
-				"perhaps we can filter the entities from the model following the type of the found node"
+			] ifFalse: [  
+ 				"in case the match is not a node, then here we rely on the aliasNode captured"
+			changes add: (Association key: (eachMatch at: (eachKey, 'Node') ) value: (bindings at: eachKey)) 	
 			]. 	
 		]. 
 	].
-	
-	self halt.
-	
+		
 	"here I have to find for each binding proposed by the developpers, the node that is matched"
 	"Then I apply sorting ?? "
 	"Then I ask for apply changes"

@@ -110,10 +110,12 @@ MatcherObject >> match: anObject withContext: aContext [
 					                (path resolveFrom: anObject) flatCollect: [ :obj | 
 						                | copy |
 						                copy := context copy.
+											copy currentPropertyOwner: anObject. "getting parent to be used in refactorings in case the match is literal"
 						                submatcher match: obj withContext: copy ] ]
 				                ifTrue: [ 
 					                | copy |
 					                copy := context copy.
+										copy currentPropertyOwner: anObject. "getting parent to be used in refactorings in case the match is literal"
 					                submatcher
 						                match: (path resolveFrom: anObject)
 						                withContext: copy ] ]) select: #isMatch ].
