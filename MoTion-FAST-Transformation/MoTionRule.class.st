@@ -60,46 +60,53 @@ MoTionRule >> collectAllBindings [
 ]
 
 { #category : 'as yet unclassified' }
-MoTionRule >> executeRefactorings [
-    | matches sortedChanges changes newSource collectedMatchers| 
+MoTionRule >> endPosOf: aNodeOrCollection [
+	^ (aNodeOrCollection isKindOf: Collection)
+		ifTrue: [ (aNodeOrCollection collect: #endPos) max ]
+		ifFalse: [ aNodeOrCollection endPos ]
+]
 
-	collectedMatchers := self collectAllBindings. 
-	
-	"1 collect matches and bindings" 
-   matches := self sourcePattern
-                   collectBindings: bindings keys asArray
-                   for: self model.
+{ #category : 'as yet unclassified' }
+MoTionRule >> executeRefactorings [
+    
+	| matches changes newSource | 
+
+	matches := self sourcePattern
+		collectBindings: bindings keys asArray
+		for: self model.
 
 	changes := OrderedCollection new.
-	
-	matches do:[ :eachMatch | 
+
+	matches do: [ :eachMatch | 
 		bindings keysDo: [ :eachKey |
-		((eachMatch at: eachKey) isLiteral ) ifFalse: [  
-			"here I have to check if we have a value or a node. if node continue, if value, check the enclosing param of the binding and match again to find a node and pass it here to create the association. "  
-			changes add: (Association key: (eachMatch at: eachKey) value: (bindings at: eachKey)) 
-			] ifTrue: [  
- 				"in case the match is not a node, then here we rely on the aliasNode captured"
-			changes add: (Association key: (eachMatch at: (eachKey, 'Node') ) value: (bindings at: eachKey)) 	
-			]. 	
-		]. 
-	].
-		
-	"here I have to find for each binding proposed by the developpers, the node that is matched"
-	"Then I apply sorting ?? "
-	"Then I ask for apply changes"
-   
-   changes := changes asSortedCollection: [ :a :b |
-                         a key startPos > b key startPos ].
-   newSource := source.
-   changes do: [ :assoc |
-        | node newVal |
-        node := assoc key.
-        newVal := assoc value.
-        newSource := newSource
-                         copyReplaceFrom: node startPos
-                         to: node endPos
-                         with: newVal ].
-    ^ newSource
+			| bound |
+			bound := eachMatch at: eachKey.
+			(bound isKindOf: Collection)
+				"ok here we need this condition because perhaps we are matching with WildcardList which returns always a collection of items. so we need to know if that is the case, so we pay attention how to fill the association"
+				ifTrue: [
+					bound ifNotEmpty: [ 
+						changes add: (Association key: bound value: (bindings at: eachKey)) ] ]
+				ifFalse: [
+					"here I have to check if we have a value or a node. if node continue, if value, check the enclosing param of the binding and match again to find a node and pass it here to create the association. "  
+					bound isLiteral 
+						ifTrue: [ 
+							"in case the match is not a node, then here we rely on the aliasNode captured" 
+							changes add: (Association key: (eachMatch at: (eachKey, 'Node') asSymbol) value: (bindings at: eachKey)) ]
+						ifFalse: [  
+							changes add: (Association key: bound value: (bindings at: eachKey)) ] ] ] ].
+	changes := changes asSortedCollection: [ :a :b |
+		(self startPosOf: a key) > (self startPosOf: b key) ].
+
+	newSource := source.
+	changes do: [ :assoc |
+		| newVal |
+		newVal := assoc value.
+		"ok here we replace values between start and end position. However when there is a collection like * rest, we replace between the min start pos and max endpos"
+		newSource := newSource
+			copyReplaceFrom: (self startPosOf: assoc key)
+			to: (self endPosOf: assoc key)
+			with: newVal ].
+	^ newSource
 ]
 
 { #category : 'as yet unclassified' }
@@ -232,4 +239,12 @@ MoTionRule >> sourcePattern [
 MoTionRule >> sourcePattern: anObject [
 
 	sourcePattern := anObject
+]
+
+{ #category : 'as yet unclassified' }
+MoTionRule >> startPosOf: aNodeOrCollection [
+	^ (aNodeOrCollection isKindOf: Collection)
+		ifTrue: [ (aNodeOrCollection collect: #startPos) min ]
+		ifFalse: [ aNodeOrCollection startPos ]
+
 ]
