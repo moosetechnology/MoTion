@@ -417,6 +417,92 @@ TestTSTransformationWithMoTion >> testRefactoringUsingDifferentBindingTypes [
 ]
 
 { #category : 'tests' }
+TestTSTransformationWithMoTion >> testRefactoringWithAt [
+    | pattern rule newSource method |
+
+    method := (model allWithType: FASTTypeScriptMethodDefinition)
+        detect: [ :m | m name sourceCode = 'multiply' ].
+
+    pattern := FASTTypeScriptMethodDefinition % {
+        (#name <=> (FASTTypeScriptPropertyIdentifier % {
+            #sourceCode <=> #'@methodName'
+        }))
+    }.
+
+    rule := MoTionRule new.
+    rule sourcePattern: pattern.
+    rule model: method.
+    rule source: sourceCode.
+    rule bindings: {
+        #methodName -> 'sum'
+    } asDictionary.
+
+    newSource := rule executeRefactorings.
+
+    self assert: (newSource includesSubstring: 'sum').
+    self deny: (newSource includesSubstring: 'multiply').
+]
+
+{ #category : 'tests' }
+TestTSTransformationWithMoTion >> testRefactoringWithAtAndAs [
+    | pattern rule newSource method |
+
+    method := (model allWithType: FASTTypeScriptMethodDefinition)
+        detect: [ :m | m name sourceCode = 'multiply' ].
+
+    pattern := FASTTypeScriptMethodDefinition % {
+        (#name <=> (FASTTypeScriptPropertyIdentifier % {
+            #sourceCode <=> #'@methodName'
+        } as: #methodNameNode))
+    }.
+
+    rule := MoTionRule new.
+    rule sourcePattern: pattern.
+    rule model: method.
+    rule source: sourceCode.
+    rule bindings: {
+        #methodName -> 'sum'
+    } asDictionary.
+
+    newSource := rule executeRefactorings.
+
+    self assert: (newSource includesSubstring: 'sum').
+    self deny: (newSource includesSubstring: 'multiply').
+]
+
+{ #category : 'tests' }
+TestTSTransformationWithMoTion >> testRefactoringWithRest [
+
+    | pattern rule newSource method |
+
+    method := (model allWithType: FASTTypeScriptMethodDefinition)
+        detect: [ :m | m name sourceCode = 'compute' ].
+
+    pattern := FASTTypeScriptMethodDefinition % {
+        (#parameters <=> (FASTTypeScriptFormalParameters % {
+            #parameters <=> {
+                #'@p1'.
+                #'*rest'
+            }
+        }))
+    }.
+
+    rule := MoTionRule new.
+    rule sourcePattern: pattern.
+    rule model: method.
+    rule source: sourceCode.
+    rule bindings: {
+        #rest -> 'y: string, z: string, w: string'
+    } asDictionary.
+
+    newSource := rule executeRefactorings.
+
+    self assert: (newSource includesSubstring: 'x: number').
+    self assert: (newSource includesSubstring: 'y: string, z: string, w: string').
+    self deny: (newSource includesSubstring: 'y: number, z: number, w: number').
+]
+
+{ #category : 'tests' }
 TestTSTransformationWithMoTion >> testRemoveClass [
     | pattern rule newSource |
     pattern := FASTTypeScriptClassDeclaration % {
@@ -609,32 +695,24 @@ TestTSTransformationWithMoTion >> testRenameClassAndMethodWildcard [
 
 { #category : 'tests' }
 TestTSTransformationWithMoTion >> testRenameMethod [
-
-	| pattern  rule newSource newModel method |
-	"creating a pattern with one binding "
-	pattern := FASTTypeScriptMethodDefinition
-	           % { #name <=> FASTTypeScriptPropertyIdentifier
-		            % { #sourceCode <=> 'multiply' } as: #methodName }.
-
-	"matching pattern with a selected method"
-	method := (model allWithType: FASTTypeScriptMethodDefinition)
-		          detect: [ :each | each name sourceCode = 'multiply' ]
-		          ifNone: [ nil ].
-	"create moTionRule "
-	rule := MoTionRule new.
-	rule sourcePattern: pattern.
-	rule model: method .
-	rule source: sourceCode.
-	"Precise the binding and the new Name of the class "
-	rule bindings: { (#methodName -> 'multiplication') } asDictionary.
-	"execute the Rule and get the new Source"
-	newSource := rule executeRefactorings.
-	"Parse the new Source Code and verify the new class named modified"
-	newModel := parser parse: newSource.
-    self assert:
-        ((newModel allWithType: FASTTypeScriptMethodDefinition)
-            anySatisfy: [ :m | m name sourceCode = 'multiplication' ]).
-
+    | pattern rule newSource newModel method |
+    pattern := FASTTypeScriptMethodDefinition % {
+        #name <=> FASTTypeScriptPropertyIdentifier % {
+            #sourceCode <=> 'multiply'
+        } as: #methodName
+    }.
+    method := (model allWithType: FASTTypeScriptMethodDefinition)
+        detect: [ :each | each name sourceCode = 'multiply' ]
+        ifNone: [ nil ].
+    rule := MoTionRule new.
+    rule sourcePattern: pattern.
+    rule model: method.
+    rule source: sourceCode.
+    rule bindings: { #methodName -> 'multiplication' } asDictionary.
+    newSource := rule executeRefactorings.
+    newModel := parser parse: newSource.
+    self assert: ((newModel allWithType: FASTTypeScriptMethodDefinition)
+        anySatisfy: [ :m | m name sourceCode = 'multiplication' ])
 ]
 
 { #category : 'tests' }
@@ -667,6 +745,54 @@ TestTSTransformationWithMoTion >> testRenameMethodParameters [
 			 p sourceCode = 'base: number' ]).
 	self deny: (method parameters children anySatisfy: [ :p |
 			 p sourceCode = 'exponent: number' ])
+]
+
+{ #category : 'tests' }
+TestTSTransformationWithMoTion >> testRenameParameter [
+    | pattern rule newSource newModel method |
+    method := (model allWithType: FASTTypeScriptMethodDefinition)
+        detect: [ :m | m name sourceCode = 'power' ].
+    pattern := FASTTypeScriptMethodDefinition % {
+        (#parameters <=> (FASTTypeScriptFormalParameters % {
+            #parameters <=> {
+                FASTTypeScriptRequiredParameter % {} as: #p1.
+                FASTTypeScriptRequiredParameter % {} as: #p2
+            }
+        }))
+    }.
+    rule := MoTionRule new.
+    rule sourcePattern: pattern.
+    rule model: method.
+    rule source: sourceCode.
+    rule bindings: {
+        #p1 -> 'x: number'.
+        #p2 -> 'y: number' } asDictionary.
+    newSource := rule executeRefactorings.
+    newModel := parser parse: newSource.
+    method := (newModel allWithType: FASTTypeScriptMethodDefinition)
+        detect: [ :m | m name sourceCode = 'power' ].
+    self assert: (newSource includesSubstring: 'x: number').
+    self assert: (newSource includesSubstring: 'y: number').
+    self deny: (newSource includesSubstring: 'base: number').
+    self deny: (newSource includesSubstring: 'exponent: number')
+]
+
+{ #category : 'tests' }
+TestTSTransformationWithMoTion >> testRenameReturnType [
+    | pattern rule newSource method |
+    method := (model allWithType: FASTTypeScriptMethodDefinition)
+        detect: [ :m | m name sourceCode = 'multiply' ].
+    pattern := FASTTypeScriptMethodDefinition % {
+        (#return_type <=> (FASTTypeScriptTypeAnnotation % {} as: #returnType))
+    }.
+    rule := MoTionRule new.
+    rule sourcePattern: pattern.
+    rule model: method.
+    rule source: sourceCode.
+    rule bindings: { #returnType -> ': string' } asDictionary.
+    newSource := rule executeRefactorings.
+    self assert: (newSource includesSubstring: ': string').
+    self deny: (newSource includesSubstring: 'multiply(a: number, b: number): number')
 ]
 
 { #category : 'tests' }

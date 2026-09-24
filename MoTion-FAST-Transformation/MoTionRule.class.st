@@ -81,19 +81,23 @@ MoTionRule >> executeRefactorings [
 		bindings keysDo: [ :eachKey |
 			| bound |
 			bound := eachMatch at: eachKey.
-			(bound isKindOf: Collection)
-				"ok here we need this condition because perhaps we are matching with WildcardList which returns always a collection of items. so we need to know if that is the case, so we pay attention how to fill the association"
-				ifTrue: [
-					bound ifNotEmpty: [ 
-						changes add: (Association key: bound value: (bindings at: eachKey)) ] ]
-				ifFalse: [
-					"here I have to check if we have a value or a node. if node continue, if value, check the enclosing param of the binding and match again to find a node and pass it here to create the association. "  
-					bound isLiteral 
-						ifTrue: [ 
-							"in case the match is not a node, then here we rely on the aliasNode captured" 
-							changes add: (Association key: (eachMatch at: (eachKey, 'Node') asSymbol) value: (bindings at: eachKey)) ]
-						ifFalse: [  
-							changes add: (Association key: bound value: (bindings at: eachKey)) ] ] ] ].
+			(eachMatch at: (eachKey, 'Node') asSymbol ifAbsent: [ nil ])
+				ifNotNil: [ :node |
+					changes add: (Association key: node value: (bindings at: eachKey)) ]
+				ifNil: [
+					(bound isKindOf: Collection)
+						"ok here we need this condition because perhaps we are matching with WildcardList which returns always a collection of items. so we need to know if that is the case, so we pay attention how to fill the association"
+						ifTrue: [
+							bound ifNotEmpty: [ 
+								changes add: (Association key: bound value: (bindings at: eachKey)) ] ]
+						ifFalse: [
+							"here I have to check if we have a value or a node. if node continue, if value, check the enclosing param of the binding and match again to find a node and pass it here to create the association. "  
+							bound isLiteral 
+								ifTrue: [ 
+									"in case the match is not a node, then here we rely on the aliasNode captured" 
+									changes add: (Association key: (eachMatch at: (eachKey, 'Node') asSymbol) value: (bindings at: eachKey)) ]
+								ifFalse: [  
+									changes add: (Association key: bound value: (bindings at: eachKey)) ] ] ] ] ].
 	changes := changes asSortedCollection: [ :a :b |
 		(self startPosOf: a key) > (self startPosOf: b key) ].
 
