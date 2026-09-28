@@ -101,23 +101,34 @@ MatcherObject >> match: anObject withContext: aContext [
 	newContexts := { aContext }.
 	(properties sort: [ :a :b | a value isBlockMatcher not ]) do: [ 
 		:entry | 
-		| path submatcher |
+		| path submatcher resolvedValues resolvedOwners |
 		path := entry key.
 		submatcher := entry value.
+		
+		"this is new to retrieve the needed values"
+		resolvedValues := path resolveFrom: anObject.
+		"this is new to retrieve the needed owners which are supposed to be nodes parents of values"
+		resolvedOwners := path resolveOwnerFrom: anObject.
+		
 		newContexts := (newContexts flatCollect: [ :context | 
 			                submatcher isCollectionMatcher
 				                ifFalse: [ 
-					                (path resolveFrom: anObject) flatCollect: [ :obj | 
+					                resolvedValues flatCollect: [ :obj | 
 						                | copy |
-						                copy := context copy.
-											copy currentPropertyOwner: anObject. "getting parent to be used in refactorings in case the match is literal"
+						                copy := context copy. 
+											"here we're getting the values whatever they are: nodes or literlas. previously we were resolving the path as is"
+											 copy currentPropertyValues: resolvedValues. 
+											"getting parent to be used in refactorings in case the match is literal"
+											copy currentPropertyOwners: resolvedOwners.
 						                submatcher match: obj withContext: copy ] ]
 				                ifTrue: [ 
 					                | copy |
 					                copy := context copy.
-										copy currentPropertyOwner: anObject. "getting parent to be used in refactorings in case the match is literal"
+										"here we're filling values and owners, and in case needed we use them later"
+										 copy currentPropertyValues: resolvedValues.
+					                copy currentPropertyOwners: resolvedOwners.
 					                submatcher
-						                match: (path resolveFrom: anObject)
+						                match: resolvedValues
 						                withContext: copy ] ]) select: #isMatch ].
 	^ newContexts
 ]

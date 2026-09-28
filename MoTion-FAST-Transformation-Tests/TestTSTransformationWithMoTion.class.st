@@ -417,6 +417,25 @@ TestTSTransformationWithMoTion >> testRefactoringUsingDifferentBindingTypes [
 ]
 
 { #category : 'tests' }
+TestTSTransformationWithMoTion >> testRefactoringWithAt [
+
+	| pattern rule newSource method |
+	method := (model allWithType: FASTTypeScriptMethodDefinition)
+		          detect: [ :m | m name sourceCode = 'multiply' ].
+	pattern := FASTTypeScriptMethodDefinition
+	           % { (#name <=> (FASTTypeScriptPropertyIdentifier
+		             % { (#sourceCode <=> #'@methodName') })) }.
+	rule := MoTionRule new.
+	rule sourcePattern: pattern.
+	rule model: method.
+	rule source: sourceCode.
+	rule bindings: { (#methodName -> 'sum') } asDictionary.
+	newSource := rule executeRefactorings.
+	self assert: (newSource includesSubstring: 'sum').
+	self deny: (newSource includesSubstring: 'multiply')
+]
+
+{ #category : 'tests' }
 TestTSTransformationWithMoTion >> testRemoveClass [
     | pattern rule newSource |
     pattern := FASTTypeScriptClassDeclaration % {
