@@ -323,6 +323,36 @@ TestTSTransformationWithMoTion >> testRefactoringParamsAndListInCollection [
 ]
 
 { #category : 'tests' }
+TestTSTransformationWithMoTion >> testRefactoringSameParamIndifferentPlaces [
+
+	| pattern rule newSource newModel class |
+	class := (model allWithType: FASTTypeScriptClassDeclaration) first.
+
+	pattern := FASTTypeScriptClassDeclaration % {
+		           (#'children*' <=> FASTTypeScriptIdentifier
+		            % { (#sourceCode <=> 'a') } as: #paramA).
+		           (#'children*' <=> FASTTypeScriptIdentifier
+		            % { (#sourceCode <=> 'b') } as: #paramB) }.
+
+	rule := MoTionRule new.
+	rule sourcePattern: pattern.
+	rule model: class.
+	rule bindings: {
+			(#paramA -> 'A').
+			(#paramB -> 'B') } asDictionary.
+
+	newSource := rule executeRefactorings.
+	newModel := parser parse: newSource.
+
+	class := (newModel allWithType: FASTTypeScriptMethodDefinition)
+		         detect: [ :m | m name sourceCode = 'multiply' ].
+	self assert: (class parameters children anySatisfy: [ :p |
+			 p sourceCode = 'A: number' ]).
+	self assert: (class parameters children anySatisfy: [ :p |
+			 p sourceCode = 'B: number' ])
+]
+
+{ #category : 'tests' }
 TestTSTransformationWithMoTion >> testRefactoringUsingAsAndListParams [
 	"Renomme classe + méthode + 2 paramètres en une seule transformation"
 
