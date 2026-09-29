@@ -323,7 +323,7 @@ TestTSTransformationWithMoTion >> testRefactoringParamsAndListInCollection [
 ]
 
 { #category : 'tests' }
-TestTSTransformationWithMoTion >> testRefactoringSameParamIndifferentPlaces [
+TestTSTransformationWithMoTion >> testRefactoringSameAsBindingIndifferentPlaces [
 
 	| pattern rule newSource newModel class |
 	class := (model allWithType: FASTTypeScriptClassDeclaration) first.
