@@ -353,6 +353,73 @@ TestTSTransformationWithMoTion >> testRefactoringSameAsBindingIndifferentPlaces 
 ]
 
 { #category : 'tests' }
+TestTSTransformationWithMoTion >> testRefactoringSameAsBindingIndifferentPlaces2 [
+
+	| pattern rule newSource newModel class |
+	class := (model allWithType: FASTTypeScriptClassDeclaration) first.
+
+	pattern := FASTTypeScriptClassDeclaration % {
+		          #'children*' <=> FASTTypeScriptMethodDefinition  % { 
+							#'name>sourceCode' <=> #'add'.
+							#'parameters>children*' <=> FASTTypeScriptIdentifier % {
+									#sourceCode <=> #'@any' 
+							} as: #paramDef.
+							#'body>children*' <=>  FASTTypeScriptIdentifier % {
+									#sourceCode <=> #'@any' 
+							} as: #paramBody.
+					 }.  
+				 }.
+
+	pattern match: class.
+	rule := MoTionRule new.
+	rule sourcePattern: pattern.
+	rule model: class.
+	rule bindings: {
+			(#paramDef -> 'A'). 
+			(#paramBody -> 'A').	} asDictionary.
+	newSource := rule executeRefactorings.
+	newModel := parser parse: newSource.
+
+	class := (newModel allWithType: FASTTypeScriptMethodDefinition)
+		         detect: [ :m | m name sourceCode = 'add' ].
+	self assert: (class parameters children anySatisfy: [ :p |
+			 p sourceCode = 'A: number' ]). 
+]
+
+{ #category : 'tests' }
+TestTSTransformationWithMoTion >> testRefactoringSameWildcardBindingIndifferentPlaces [
+
+	| pattern rule newSource newModel class |
+	class := (model allWithType: FASTTypeScriptClassDeclaration) first.
+
+	pattern := FASTTypeScriptClassDeclaration % {
+		          #'children*' <=> FASTTypeScriptMethodDefinition  % { 
+							#'name>sourceCode' <=> #'add'.
+							#'parameters>children*' <=> FASTTypeScriptIdentifier % {
+									#sourceCode <=> #'@paramA' 
+							}.
+							#'body>children*' <=> FASTTypeScriptIdentifier % {
+									#sourceCode <=> #'@paramA' 
+							}.
+					 }.  
+				 }.
+
+	pattern match: class.
+	rule := MoTionRule new.
+	rule sourcePattern: pattern.
+	rule model: class.
+	rule bindings: {
+			(#paramA -> 'A'). } asDictionary.
+	newSource := rule executeRefactorings.
+	newModel := parser parse: newSource.
+
+	class := (newModel allWithType: FASTTypeScriptMethodDefinition)
+		         detect: [ :m | m name sourceCode = 'add' ].
+	self assert: (class parameters children anySatisfy: [ :p |
+			 p sourceCode = 'A: number' ]). 
+]
+
+{ #category : 'tests' }
 TestTSTransformationWithMoTion >> testRefactoringUsingAsAndListParams [
 	"Renomme classe + méthode + 2 paramètres en une seule transformation"
 
