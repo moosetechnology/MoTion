@@ -23,6 +23,11 @@ MatcherSave class >> of: aMatcher withAlias: aSymbol [
 ]
 
 { #category : 'accessing' }
+MatcherSave >> alias [
+    ^ alias
+]
+
+{ #category : 'accessing' }
 MatcherSave >> alias: aSymbol [
 
 	alias := aSymbol

@@ -37,3 +37,8 @@ MotionPath >> resolveCollectionFrom: anObject [
 MotionPath >> resolveFrom: anObject [
 	self shouldBeImplemented 
 ]
+
+{ #category : 'as yet unclassified' }
+MotionPath >> resolveOwnerFrom: anObject [
+	^ { anObject }
+]

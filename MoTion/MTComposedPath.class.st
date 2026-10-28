@@ -88,3 +88,29 @@ MTComposedPath >> resolveFrom: anObject [
 			tmpObjects addAll: result flattened ] ].
 	^ tmpObjects asArray
 ]
+
+{ #category : 'as yet unclassified' }
+MTComposedPath >> resolveOwnerFrom: anObject [
+	
+	| tmpObjects copy |
+	
+	"this method runs only when we have composedPath; for example for children>sourceCode. It reads the path until before last property, which is in this case only children, and returns the matches for children that will logically be nodes instead of literals."
+	
+	tmpObjects := { anObject } asOrderedCollection.
+	
+	"allButLast is the difference between this method and normal resolveFrom: "
+	paths allButLast do: [ :each |
+		copy := tmpObjects shallowCopy.
+		tmpObjects removeAll.
+		copy do: [ :intermediate |
+			
+			| result |
+			
+			"so here we're resolving all paths except the last one."
+			 
+			result := [ each resolveFrom: intermediate ]
+				on: Exception
+				do: [ #() ].
+			tmpObjects addAll: result flattened ] ].
+	^ tmpObjects asArray
+]

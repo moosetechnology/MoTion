@@ -6,7 +6,9 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'bindings',
-		'isMatch'
+		'isMatch',
+		'currentPropertyValues',
+		'currentPropertyOwners'
 	],
 	#category : 'MoTion-results',
 	#package : 'MoTion',
@@ -29,12 +31,40 @@ MatchingContext >> bindings [
 
 { #category : 'accessing' }
 MatchingContext >> copy [
-
 	| instance |
 	instance := self class new.
 	instance bindings addAll: self bindings.
 	instance isMatch: self isMatch.
+	
+	"also copy the new instance variables"
+	instance currentPropertyValues: self currentPropertyValues.
+	instance currentPropertyOwners: self currentPropertyOwners.
+	
 	^ instance
+]
+
+{ #category : 'accessing' }
+MatchingContext >> currentPropertyOwners [
+
+	^ currentPropertyOwners
+]
+
+{ #category : 'accessing' }
+MatchingContext >> currentPropertyOwners: aCollection [
+
+	currentPropertyOwners := aCollection
+]
+
+{ #category : 'accessing' }
+MatchingContext >> currentPropertyValues [
+
+	^ currentPropertyValues
+]
+
+{ #category : 'accessing' }
+MatchingContext >> currentPropertyValues: aCollection [
+
+	currentPropertyValues := aCollection
 ]
 
 { #category : 'initialization' }

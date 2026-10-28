@@ -50,9 +50,18 @@ Matcher >> collectBinding: aString for: anObject [
 
 { #category : 'accessing' }
 Matcher >> collectBindings: bindings for: anObject [
-
+ 
+	"Ok here I am changing the logic behind this method to include the new key that is added to get the parent of literals. with the old method the new key can't be filtered, so refactorings won't be applied. now with this change it will be fine... "
+	
 	^ ((self match: anObject) matchingContexts collect: [ :context | 
-		   context bindings filterKeys: bindings ]) removeDuplicates
+		   | expandedKeys |
+		   expandedKeys := bindings asOrderedCollection.
+		   bindings do: [ :key | 
+			   | nodeKey |
+			   nodeKey := (key , 'Node') asSymbol.
+			   (context bindings includesKey: nodeKey) ifTrue: [ 
+				   expandedKeys add: nodeKey ] ].
+		   context bindings filterKeys: expandedKeys ]) removeDuplicates
 ]
 
 { #category : 'matching' }
