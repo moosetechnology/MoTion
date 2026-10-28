@@ -1,7 +1,8 @@
 SmalltalkCISpec {
   #loading : [
     SCIMetacelloLoadSpec {
-      #baseline : 'MoTion'
+      #baseline : 'MoTion',
+      #directory : 'src'
     }
   ]
 }
