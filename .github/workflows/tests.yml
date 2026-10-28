@@ -8,11 +8,11 @@ on:
   push:
     branches:
       - main
-      - workOfTrainee
+      - WorkOfTrainee
   pull_request:
     branches:
       - main
-      - workOfTrainee
+      - WorkOfTrainee
 
 jobs:
   run:
