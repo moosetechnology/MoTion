@@ -1,3 +1,5 @@
+[![Latest Moose](https://github.com/moosetechnology/MoTion/actions/workflows/tests.yml/badge.svg)](https://github.com/moosetechnology/MoTion/actions/workflows/tests.yml)
+
 ## Description
 
 MoTion is a new object pattern matcher in Pharo. A pattern matcher works on a finite set of objects that we will call a model. Examples of models are: the Pharo AST of a method, the DOM of an XML document, the objects loaded from a JSON file, ...
@@ -5,7 +7,10 @@ MoTion can deal with Pharo objects independently of the model containing the dat
 MoTion combines both features for graph pattern matching and object matching, and by that it enables expressing patterns declaratively and applying matches over complex object structures.
 With its refactoring rules, MoTion can also transform the code it matches.
 
-[![Latest Moose](https://github.com/moosetechnology/MoTion/actions/workflows/tests.yml/badge.svg)](https://github.com/moosetechnology/MoTion/actions/workflows/tests.yml)
+### Update on October 2026
+MoTion is now capable of applying some refactorings based on bindings. 
+This represents the outcome of several months of work by the trainee and will be discussed in a subsequent section.
+Please note that these refactorings can only be applied over FAST metamodels and we are still at the beginning, yet cool stuff can be done with the existing.
 
 ## Installation
 To install MoTion, go to the Playground (`Ctrl+OW`) in your Pharo image and execute the following Metacello script (select it and press Do-it button or `Ctrl+D`):
@@ -36,6 +41,8 @@ This pattern finds, in a Java model, the interfaces that inherit from `Remote` a
 
 ## Documentation
 
+Want to use MoTion? Here's are the references that you need to help you using it properly. Enjoy :)
+
 | Page | What you'll find |
 |---|---|
 | [Syntax](docs/syntax.md) | All the operators: object patterns `% {}` / `%% {}`, `<=>`, negation `<~=>`, `@x` variables, wildcards, paths `>`, recursion `*`, lists, sets, `orMatches:`, number comparisons |
@@ -46,6 +53,9 @@ This pattern finds, in a Java model, the interfaces that inherit from `Remote` a
 ## Finally
 
 Don't hesitate to ask. More examples can be found in the tests packages.
+
 Also, if you are not familiar with MoTion or are using it for the first time, no worries: you can find skills for MoTion that you can use with any AI agent here: https://github.com/alesshosry/MoTionSkills.
-Also, don't hesitate to have a look at Iguala, which is the same matcher implemented in Python: https://github.com/aranega/iguala
-Finally, well, just enjoy it :)
+
+Pssst: don't hesitate to have a look at Iguala, which is the same matcher implemented in Python: https://github.com/aranega/iguala
+
+Finally, well, just enjoy it ;)
