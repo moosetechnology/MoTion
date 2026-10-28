@@ -49,6 +49,7 @@ Want to use MoTion? Here's are the references that you need to help you using it
 | [How to use the matcher](docs/using-the-matcher.md) | `asMatcher`, `match:`, results, bindings with `as:` and `collectBindings:for:` |
 | [Some cool examples](docs/examples.md) | Patterns on Famix Java, FAST Java, Pharo packages and XML |
 | [Refactorings with MoTion](docs/refactorings.md) | Renaming, replacing and removing code with `MoTionRule` |
+| [Inspect MoTion Patterns](docs/inspector.md) |  Inspect suspicious MoTion patterns using MatcherInspector  |
 
 ## Finally
 
