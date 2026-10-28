@@ -32,13 +32,23 @@ MatcherNAC >> innerMatcher: aMatcher [
 	innerMatcher := aMatcher
 ]
 
+{ #category : 'converting' }
+MatcherNAC >> isCollectionMatcher [ 
+	^ innerMatcher isCollectionMatcher
+]
+
 { #category : 'matching' }
 MatcherNAC >> match: aValue withContext: aContext [
 
-	| contexts |
+	"| contexts |
 	contexts := innerMatcher match: aValue withContext: aContext.
 	contexts := contexts collect: [ :ctx | 
 		            ctx isMatch: ctx isMatch not.
 		            ctx ].
-	^ contexts
+	^ contexts"
+	
+   | innerContexts |
+	innerContexts := innerMatcher match: aValue withContext: aContext copy.
+	aContext isMatch: (innerContexts anySatisfy: #isMatch) not.
+	^ { aContext }
 ]

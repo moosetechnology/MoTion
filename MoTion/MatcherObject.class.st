@@ -113,14 +113,25 @@ MatcherObject >> match: anObject withContext: aContext [
 		newContexts := (newContexts flatCollect: [ :context | 
 			                submatcher isCollectionMatcher
 				                ifFalse: [ 
-					                resolvedValues flatCollect: [ :obj | 
+										resolvedValues ifEmpty: [  
+											| copy |
+											copy := context copy.
+											copy currentPropertyValues: resolvedValues.
+											copy currentPropertyOwners: resolvedOwners.
+											submatcher match: resolvedValues withContext: copy	
+										]
+										ifNotEmpty: [ 
+											resolvedValues flatCollect: [ :obj | 
 						                | copy |
 						                copy := context copy. 
 											"here we're getting the values whatever they are: nodes or literlas. previously we were resolving the path as is"
 											 copy currentPropertyValues: resolvedValues. 
 											"getting parent to be used in refactorings in case the match is literal"
 											copy currentPropertyOwners: resolvedOwners.
-						                submatcher match: obj withContext: copy ] ]
+						                submatcher match: obj withContext: copy ]
+											
+											]
+					                 ]
 				                ifTrue: [ 
 					                | copy |
 					                copy := context copy.

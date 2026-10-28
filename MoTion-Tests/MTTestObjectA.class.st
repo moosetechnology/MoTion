@@ -56,6 +56,12 @@ MTTestObjectA >> lst [
 ]
 
 { #category : 'accessing' }
+MTTestObjectA >> lst: anObject [
+
+	lst := anObject
+]
+
+{ #category : 'accessing' }
 MTTestObjectA >> lstring: anObject [
 
 	lstring := anObject
