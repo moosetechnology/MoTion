@@ -4,7 +4,7 @@
 
 Besides finding code, MoTion can **transform** it. You write a pattern that binds the parts of the code you want to change, then a `MoTionRule` rewrites those parts in the source text.
 
-Refactorings currently work on [FAST](https://github.com/moosetechnology/FAST) models, because they rely on every node knowing its position in the source (`startPos` / `endPos`). They are tested on TypeScript, with [FASTTypeScript](https://github.com/moosetechnology/FASTTypescript).
+Refactorings currently work on FAST models like [FAST-Java](https://github.com/moosetechnology/FAST-Java) or other [FAST metamodels](https://github.com/orgs/Evref-BL/repositories?q=fast), because they rely on every node knowing its position in the source (`startPos` / `endPos`). They are tested on TypeScript, with [FASTTypeScript](https://github.com/moosetechnology/FASTTypescript).
 
 ## Installation
 
